@@ -5,31 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>書籍清單</title>
 <link rel="stylesheet" href="style.css">
-<style>
-  body { font-family: sans-serif; margin: 20px; }
-  input, select, button { margin: 3px; }
-  table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-  th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
-</style>
+
 </head>
 <body>
 
 <h1>我的書籍清單</h1>
 
-<div>
-  <select id="filter-category" onchange="applyFilter()">
-    <option value="">全部分類</option>
-  </select>
-  
-  <select id="filter-author" onchange="applyFilter()">
-    <option value="">全部作者</option>
+<div id="filters">
+  <select id="filter-column" onchange="updateSecondFilter(); applyFilter()">
+    <option value="">選擇欄位</option>
+    <option value="title">書名</option>
+    <option value="category">分類</option>
+    <option value="author">作者</option>
+    <option value="publisher">出版社</option>
+    <option value="format">格式</option>
+    <option value="location">位置</option>
+    <option value="volume">集數</option>
+    <option value="owner">誰的</option>
   </select>
 
-  <select id="filter-owner" onchange="applyFilter()">
-    <option value="">全部擁有者</option>
+  <select id="filter-value" onchange="applyFilter()">
+    <option value="">全部</option>
   </select>
+
+  <input type="text" id="search-box" placeholder="搜尋書名..." oninput="applyFilter()">
 </div>
-
 
 <div>
   <input type="text" id="title" placeholder="書名">

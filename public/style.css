@@ -43,6 +43,9 @@ table {
 th, td {
   border: 1px solid #ccc;
   padding: 8px;
+}
+
+th{
   text-align: center;  /* 文字置中 */
   overflow: hidden;    /* 文字超出隱藏 */
   white-space: nowrap; /* 不換行 */

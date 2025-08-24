@@ -1,76 +1,77 @@
-let allBooks = []; // 儲存所有書籍資料
+let allBooks = [];
 
+// 取得書籍
 async function fetchBooks() {
   const res = await fetch('/books');
-  const books = await res.json();
-  allBooks = books;
-  populateFilters(); // 更新篩選選項
-  renderBooks(books); // 顯示書籍
+  allBooks = await res.json();
+  updateSecondFilter();
+  renderBooks(allBooks);
 }
 
-// 顯示書籍表格
+// 渲染表格
 function renderBooks(books) {
   const tbody = document.querySelector('#book-table tbody');
   tbody.innerHTML = '';
-  books.forEach(book => {
+  books.forEach(b => {
     const tr = document.createElement('tr');
     tr.innerHTML = `
-      <td>${book.title}</td>
-      <td>${book.category || ''}</td>
-      <td>${book.author || ''}</td>
-      <td>${book.publisher || ''}</td>
-      <td>${book.format || ''}</td>
-      <td>${book.location || ''}</td>
-      <td>${book.volume || ''}</td>
-      <td>${book.owner || ''}</td>
-      <td>${book.note || ''}</td>
-      <td><button onclick="deleteBook(${book.id})">刪除</button></td>
+      <td>${b.title}</td>
+      <td>${b.category || ''}</td>
+      <td>${b.author || ''}</td>
+      <td>${b.publisher || ''}</td>
+      <td>${b.format || ''}</td>
+      <td>${b.location || ''}</td>
+      <td>${b.volume || ''}</td>
+      <td>${b.owner || ''}</td>
+      <td><button onclick="deleteBook(${b.id})">刪除</button></td>
     `;
     tbody.appendChild(tr);
   });
 }
 
-// 填充篩選選項
-function populateFilters() {
-  const categorySet = new Set();
-  const authorSet = new Set();
-  const ownerSet = new Set();
+// 更新第二個下拉選單
+function updateSecondFilter() {
+  const column = document.getElementById('filter-column').value;
+  const valueSelect = document.getElementById('filter-value');
 
+  if (!column) {
+    valueSelect.innerHTML = `<option value="">全部</option>`;
+    return;
+  }
+
+  const values = new Set();
   allBooks.forEach(b => {
-    if(b.category) categorySet.add(b.category);
-    if(b.author) authorSet.add(b.author);
-    if(b.owner) ownerSet.add(b.owner);
+    if (b[column]) values.add(b[column]);
   });
 
-  fillSelect('filter-category', categorySet);
-  fillSelect('filter-author', authorSet);
-  fillSelect('filter-owner', ownerSet);
-}
-
-function fillSelect(selectId, itemsSet) {
-  const select = document.getElementById(selectId);
-  select.innerHTML = `<option value="">全部</option>`;
-  Array.from(itemsSet).sort().forEach(item => {
+  valueSelect.innerHTML = `<option value="">全部</option>`;
+  Array.from(values).sort().forEach(v => {
     const opt = document.createElement('option');
-    opt.value = item;
-    opt.textContent = item;
-    select.appendChild(opt);
+    opt.value = v;
+    opt.textContent = v;
+    valueSelect.appendChild(opt);
   });
 }
 
-// 篩選函式
+// 篩選
 function applyFilter() {
-  const category = document.getElementById('filter-category').value;
-  const author = document.getElementById('filter-author').value;
-  const owner = document.getElementById('filter-owner').value;
+  const column = document.getElementById('filter-column').value;
+  const value = document.getElementById('filter-value').value;
+  const searchText = document.getElementById('search-box').value.toLowerCase();
 
   const filtered = allBooks.filter(b => {
-    return (!category || b.category === category) &&
-           (!author || b.author === author) &&
-           (!owner || b.owner === owner);
+    const matchesSearch = !searchText || b.title.toLowerCase().includes(searchText);
+    const matchesColumn = !column || !value || b[column] === value;
+    return matchesSearch && matchesColumn;
   });
 
   renderBooks(filtered);
+}
+
+// 刪除書籍
+async function deleteBook(id) {
+  await fetch(`/books/${id}`, { method: 'DELETE' });
+  fetchBooks();
 }
 
 fetchBooks();
