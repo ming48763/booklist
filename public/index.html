@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>書籍清單</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  body { font-family: sans-serif; margin: 20px; }
+  input, select, button { margin: 3px; }
+  table { border-collapse: collapse; width: 100%; margin-top: 10px; }
+  th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
+</style>
+</head>
+<body>
+
+<h1>我的書籍清單</h1>
+
+<div>
+  <select id="filter-category" onchange="applyFilter()">
+    <option value="">全部分類</option>
+  </select>
+  
+  <select id="filter-author" onchange="applyFilter()">
+    <option value="">全部作者</option>
+  </select>
+
+  <select id="filter-owner" onchange="applyFilter()">
+    <option value="">全部擁有者</option>
+  </select>
+</div>
+
+
+<div>
+  <input type="text" id="title" placeholder="書名">
+  <input type="text" id="category" placeholder="分類">
+  <input type="text" id="author" placeholder="作者">
+  <input type="text" id="publisher" placeholder="出版社">
+  <input type="text" id="format" placeholder="格式">
+  <input type="text" id="location" placeholder="位置">
+  <input type="text" id="volume" placeholder="集數">
+  <input type="text" id="owner" placeholder="誰的">
+  <button onclick="addBook()">新增</button>
+</div>
+
+<table id="book-table">
+  <thead>
+    <tr>
+      <th>書名</th>
+      <th>分類</th>
+      <th>作者</th>
+      <th>出版社</th>
+      <th>格式</th>
+      <th>位置</th>
+      <th>集數</th>
+      <th>誰的</th>
+      <th>操作</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script src="script.js"></script>
+</body>
+</html>
