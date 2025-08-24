@@ -8,12 +8,31 @@ body {
   color: #333;
 }
 
-/* 篩選器區域 */
-div {
+/* 搜尋區塊 */
+#search-block {
+  background-color: #fffae6; /* 淺黃色 */
+  padding: 10px;
   margin-bottom: 10px;
+  border-radius: 5px;
 }
 
-select, input[type="text"], button {
+/* 篩選區塊 */
+#filter-block {
+  background-color: #e6f7ff; /* 淺藍色 */
+  padding: 10px;
+  margin-bottom: 15px;
+  border-radius: 5px;
+}
+
+/* 區塊內元件間距 */
+#search-block input,
+#filter-block select,
+#filter-block input {
+  margin-right: 8px;
+  padding: 5px 8px;
+}
+
+select, input[type="text"], button , label {
   padding: 5px 8px;
   margin-right: 5px;
   font-size: 14px;

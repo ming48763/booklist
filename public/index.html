@@ -11,7 +11,14 @@
 
 <h1>我的書籍清單</h1>
 
-<div id="filters">
+
+<div id="search-block">
+  <a>搜尋器</a>
+    <input type="text" id="search-box" placeholder="🔍 搜尋書名..." oninput="applyFilter()">
+</div>
+
+<div id="filter-block">
+    <a>篩選器</a>
   <select id="filter-column" onchange="updateSecondFilter(); applyFilter()">
     <option value="">選擇欄位</option>
     <option value="title">書名</option>
@@ -28,20 +35,11 @@
     <option value="">全部</option>
   </select>
 
-  <input type="text" id="search-box" placeholder="搜尋書名..." oninput="applyFilter()">
+  <label><input type="checkbox" id="finished-checkbox" onchange="applyFilter()"> 已完結</label>
 </div>
 
-<div>
-  <input type="text" id="title" placeholder="書名">
-  <input type="text" id="category" placeholder="分類">
-  <input type="text" id="author" placeholder="作者">
-  <input type="text" id="publisher" placeholder="出版社">
-  <input type="text" id="format" placeholder="格式">
-  <input type="text" id="location" placeholder="位置">
-  <input type="text" id="volume" placeholder="集數">
-  <input type="text" id="owner" placeholder="誰的">
-  <button onclick="addBook()">新增</button>
-</div>
+<button id="edit-toggle" onclick="toggleEditMode()">切換編輯模式</button>
+<button onclick="goToAddPage()">新增書籍</button>
 
 <table id="book-table">
   <thead>
@@ -59,6 +57,8 @@
   </thead>
   <tbody></tbody>
 </table>
+
+<button onclick="syncDB()">從 Google Sheet 同步資料庫</button>
 
 <script src="script.js"></script>
 </body>

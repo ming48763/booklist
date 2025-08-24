@@ -60,3 +60,44 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
+
+const { google } = require('googleapis');
+
+const auth = new google.auth.GoogleAuth({
+  keyFile: 'booklist-470015-b075c39ed522.json',
+  scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
+});
+const sheets = google.sheets({ version: 'v4', auth });
+const SPREADSHEET_ID = '1eZRmOGe0aOvhN3fvyqm6OLQVOHPXGBlsIHoQqF5iFkM';
+const RANGE = '漫畫!A2:H1000'; // 從第二列開始，假設第一列是標題
+
+app.post('/sync-db', async (req, res) => {
+  try {
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: RANGE,
+    });
+
+    const rows = response.data.values;
+    if (!rows || rows.length === 0) return res.json({ message: 'Sheet沒有資料' });
+
+    // 先清空原本資料
+    db.run("DELETE FROM books", err => {
+      if (err) return res.status(500).json({ error: err.message });
+
+      const stmt = db.prepare(`INSERT INTO books (title, category, author, publisher, format, location, volume, owner) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`);
+      rows.forEach(r => {
+        stmt.run(r, err => {
+          if (err) console.log('DB insert error:', err.message);
+        });
+      });
+      stmt.finalize();
+
+      res.json({ message: '資料庫已更新完成' });
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
+  }
+});
